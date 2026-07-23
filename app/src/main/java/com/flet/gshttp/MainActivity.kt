@@ -725,7 +725,7 @@ fun MainAppScreen(
                     TextButton(
                         onClick = {
                             try {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gs-ht.ru"))
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gs-ht.ru/GS.HTTP-documentation.html"))
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
@@ -733,7 +733,7 @@ fun MainAppScreen(
                         }
                     ) {
                         Text(
-                            text = strings["privacy_policy"] ?: "https://gs-ht.ru/GS.HTTP-documentation.html",
+                            text = strings["privacy_policy"] ?: "https://gs-ht.ru/",
                             color = Color(0xFF2979FF),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
