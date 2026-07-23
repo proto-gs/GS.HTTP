@@ -725,7 +725,7 @@ fun MainAppScreen(
                     TextButton(
                         onClick = {
                             try {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gs-ht.ru/GS.HTTP-documentation.html"))
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gs-ht.ru/PRIVACY_GS.HTTP_EN.html"))
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
