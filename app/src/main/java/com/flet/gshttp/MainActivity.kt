@@ -733,7 +733,7 @@ fun MainAppScreen(
                         }
                     ) {
                         Text(
-                            text = strings["privacy_policy"] ?: "Privacy Policy",
+                            text = strings["privacy_policy"] ?: "https://gs-ht.ru/GS.HTTP-documentation.html",
                             color = Color(0xFF2979FF),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
@@ -753,7 +753,7 @@ fun MainAppScreen(
                     TextButton(
                         onClick = {
                             try {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com"))
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/proto-gs/GS.HTTP"))
                                 context.startActivity(intent)
                             } catch (e: Exception) {
                                 e.printStackTrace()
