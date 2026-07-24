@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GS | Ecosystem</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="lang-button.css" />
+    <link rel="stylesheet" href="id.css" />
+    <link rel="icon" href="images/GS.Ecosystem.png" type="image/png" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-left"></div>
+
+      <ul class="nav-menu">
+        <li>
+          <a href="https://gs-ht.ru" class="nav-link" data-lang-key="nav-main">Главная</a>
+        </li>
+        <li>
+          <a href="documentation.html" class="nav-link active" data-lang-key="nav-protocol">Документация</a>
+        </li>
+        <li>
+          <a href="apps.html" class="nav-link" data-lang-key="nav-apps">Приложения</a>
+        </li>
+      </ul>
+
+      <div class="header-right">
+        <div class="lang-switcher">
+          <span class="lang-button">RU</span>
+          <div class="lang-dropdown">
+            <a href="#" class="lang-item" data-lang="en">English</a>
+            <a href="#" class="lang-item" data-lang="ru">Русский</a>
+          </div>
+        </div>
+      </div>
+      <div class="tl_main_page_container"></div>
+    </header>
+    <div class="formater_cvet">
+        <h1>Политика конфиденциальности GS.HTTP</h1>
+        <p id="about-project">Политика конфиденциальности мобильного приложения <strong>GS.HTTP</strong> по требованиям Роскомнадзора и Федерального закона № 152-ФЗ "О персональных данных" включает в себя план из 7 пунктов:<br>
+        1. <a href="#section-1" id="privacy-website-corrent">Общие положения</a><br>
+        2. <a href="#section-2" id="privacy-website-corrent">Статус open-source и лицензия MIT License</a><br>
+        3. <a href="#section-3" id="privacy-website-corrent">Категории данных и локальное хранение</a><br>
+        4. <a href="#section-4" id="privacy-website-corrent">Цели обработки и ответственность за трафик</a><br>
+        5. <a href="#section-5" id="privacy-website-corrent">Отсутствие серверной аналитики</a><br>
+        6. <a href="#section-6" id="privacy-website-corrent">Права пользователей</a><br>
+        7. <a href="#section-7" id="privacy-website-corrent">Обратная связь</a><br>
+    </p>
+    </div>
+    <div class="formater_cvet">
+        <h3 id="section-1">1. Общие положения</h3>
+        <p id="about-project">Настоящая Политика конфиденциальности определяет порядок обработки информации пользователей мобильного приложения «GS.HTTP» (далее — приложение).<br> Документ разработан в соответствии с Федеральным законом РФ № 152-ФЗ «О персональных данных» и международными стандартами (GDPR, CCPA).</p>
+    </div>
+    <div class="formater_cvet">
+        <h3 id="section-2">2. Статус open-source и лицензия MIT License</h3>
+        <p id="about-project">Исходный код приложения является полностью открытым и распространяется на условиях лицензии <a href="LICENSE.html" id="privacy-website-corrent">MIT License</a>.<br> Любой пользователь может провести аудит кода в публичном репозитории и убедиться в отсутствии скрытых алгоритмов сбора или передачи данных третьим лицам.</p>
+    </div>
+    <div class="formater_cvet">
+        <h3 id="section-3">3. Категории данных и локальное хранение</h3>
+        <p id="about-project">
+            3.1. Персональные данные: приложение <strong>не собирает</strong> и не хранит персональные данные пользователей (ФИО, email, телефон, IP-адреса) на внешних серверах разработчика.<br><br>
+            3.2. Технические данные: для выполнения функций HTTP-клиента приложение обрабатывает вводимые пользователем URL-адреса, типы методов (GET, POST, PUT, DELETE), заголовки (Headers), токены авторизации и историю запросов.<br><br>
+            3.3. Вся информация обрабатывается и сохраняется <strong>исключительно локально</strong> в памяти мобильного устройства пользователя. Разработчик не имеет доступа к этим данным.
+        </p>
+        <h3 id="section-4">4. Цели обработки и ответственность за трафик</h3>
+        <p id="about-project">
+            Сетевые данные обрабатываются локально на устройстве исключительно для формирования HTTP-запросов и отображения ответов серверов по инициативе пользователя.<br> Разработчик не контролирует характер отправляемых пользователем запросов.<br> Полную ответственность за легитимность трафика и соблюдение правил целевых серверов несет пользователь.
+        </p>
+        <h3 id="section-5">5. Отсутствие серверной аналитики</h3>
+        <p id="about-project">
+            Приложение разработано на фреймворке Kotlin/Compose Jetpack и не содержит встроенных рекламных SDK или скрытых модулей аналитики (Firebase, Google Analytics), собирающих телеметрию устройства.
+        </p>
+        <h3 id="section-6">6. Права пользователей</h3>
+        <p id="about-project">
+            Пользователь может в любой момент очистить историю запросов через интерфейс приложения или полностью удалить приложение, что приведет к мгновенному уничтожению локальной базы данных.<br> Безопасность сохраненных токенов зависит от защиты самого мобильного устройства.
+        </p>
+        <h3 id="section-7">7. Обратная связь</h3>
+        <p id="about-project">
+            По всем вопросам касательно политики конфиденциальности обращаться по адресу: <strong>smerdovgeorgy@yandex.ru</strong>.
+        </p>
+    </div>
+      <br><br>
+  <p id="copyright-text">&copy 2026 Георгий Смердов (ГС Екосистем). <br>Все права защищены.</p>
+    <script src="script.js"></script>
+  </body>
+</html>
