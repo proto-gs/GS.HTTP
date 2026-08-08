@@ -114,23 +114,23 @@ fun MainAppScreen(
 
 
 
-            "btn_start" to if (currentLanguage == "ru") "ПРИСТУПИТЬ" else "GET STARTED",
-            "btn_scan" to if (currentLanguage == "ru") "ЗАПУСТИТЬ СКАН" else "RUN SCAN",
-            "btn_back" to if (currentLanguage == "ru") "← ВЕРНУТЬСЯ" else "← BACK",
-            "btn_open_browser" to if (currentLanguage == "ru") "ОТКРЫТЬ В БРАУЗЕРЕ" else "OPEN IN BROWSER",
-            "btn_open_browser_emoji" to if (currentLanguage == "ru") "ОТКРЫТЬ САЙТ В БРАУЗЕРЕ 🌐" else "OPEN SITE IN BROWSER 🌐",
-            "btn_search_data" to if (currentLanguage == "ru") "ПОИСК ПО ДАННЫМ ОТВЕТА" else "SEARCH RESPONSE DATA",
+            "btn_start" to if (currentLanguage == "ru") "Сканер URL" else "URL Scanner",
+            "btn_scan" to if (currentLanguage == "ru") "Запустить скан" else "Run scan",
+            "btn_back" to if (currentLanguage == "ru") "← Вернуться" else "← Back",
+            "btn_open_browser" to if (currentLanguage == "ru") "Открыть в браузере" else "Open in browser",
+            "btn_open_browser_emoji" to if (currentLanguage == "ru") "Открыть сайт в браузере" else "Open site in browser",
+            "btn_search_data" to if (currentLanguage == "ru") "Поиск по данным ответа" else "Search response data",
 
 
             "placeholder_url" to if (currentLanguage == "ru") "Проверить URL" else "Check URL",
             "search_log_placeholder" to if (currentLanguage == "ru") "Поиск текста внутри лога..." else "Search text inside log...",
 
 
-            "status_error" to if (currentLanguage == "ru") "ОШИБКА" else "ERROR",
-            "status_invalid" to if (currentLanguage == "ru") "НЕКОРРЕКТНЫЙ ВВОД" else "INVALID INPUT",
-            "status_ssl" to if (currentLanguage == "ru") "БЕЗОПАСНО (SSL)" else "SECURE (SSL)",
-            "status_http" to if (currentLanguage == "ru") "НЕБЕЗОПАСНО (HTTP)" else "UNSECURE (HTTP)",
-            "status_no_server" to if (currentLanguage == "ru") "СЕРВЕР НЕДОСТУПЕН" else "SERVER UNREACHABLE",
+            "status_error" to if (currentLanguage == "ru") "Ошибка" else "Error",
+            "status_invalid" to if (currentLanguage == "ru") "Некорректный ввод" else "Invalid input",
+            "status_ssl" to if (currentLanguage == "ru") "Безопасно (SSL)" else "Secure (SSL)",
+            "status_http" to if (currentLanguage == "ru") "Небезопасно (HTTP)" else "Unsecure (HTTP)",
+            "status_no_server" to if (currentLanguage == "ru") "Сервер недоступен" else "Server unreachable",
 
 
             "auto_redirect" to if (currentLanguage == "ru") "Авто-редирект" else "Auto-redirect",
@@ -144,13 +144,13 @@ fun MainAppScreen(
             "theme_dark" to if (currentLanguage == "ru") "Тёмная" else "Dark",
 
 
-            "lang_btn" to if (currentLanguage == "ru") "Язык / Language" else "Language / Язык",
+            "lang_btn" to if (currentLanguage == "ru") "Язык" else "Language",
             "lang_title" to if (currentLanguage == "ru") "Выберите язык" else "Select Language",
 
 
-            "history_title" to if (currentLanguage == "ru") "ИСТОРИЯ ЗАПРОСОВ" else "REQUEST HISTORY",
+            "history_title" to if (currentLanguage == "ru") "История запросов" else "Request history",
             "history_empty" to if (currentLanguage == "ru") "История пока пуста" else "History is empty",
-            "inspector_title" to if (currentLanguage == "ru") "ДАННЫЕ ОТВЕТА СЕРВЕРА" else "SERVER RESPONSE DATA",
+            "inspector_title" to if (currentLanguage == "ru") "Данные ответа сервера" else "Server response data",
 
 
             "not_found" to if (currentLanguage == "ru") "Ничего не найдено" else "Nothing found",
@@ -259,9 +259,9 @@ fun MainAppScreen(
                 (url.startsWith("http:/") && !url.startsWith("http://"))
 
         if (url.isEmpty() || hasSpaces || isInvalidProtocol) {
-            resText = strings["status_error"] ?: "ERROR"
+            resText = strings["status_error"] ?: "Error"
             resTextColor = Color(0xFFFF1744)
-            safeText = strings["status_invalid"] ?: "INVALID INPUT"
+            safeText = strings["status_invalid"] ?: "Invalid input"
             safeTextColor = Color(0xFFFF1744)
             isLoading = false
         } else {
@@ -320,14 +320,14 @@ fun MainAppScreen(
                                 ?: ""
                     }
                 } catch (e: IllegalArgumentException) {
-                    resText = strings["status_error"] ?: "ERROR"
+                    resText = strings["status_error"] ?: "Error"
                     resTextColor = Color(0xFFFF1744)
-                    safeText = strings["status_invalid"] ?: "INVALID INPUT"
+                    safeText = strings["status_invalid"] ?: "Invalid input"
                     safeTextColor = Color(0xFFFF1744)
                 } catch (e: IOException) {
-                    resText = strings["status_error"] ?: "ERROR"
+                    resText = strings["status_error"] ?: "Error"
                     resTextColor = Color(0xFFFF1744)
-                    safeText = strings["status_no_server"] ?: "SERVER UNREACHABLE"
+                    safeText = strings["status_no_server"] ?: "Server unreachable"
                     safeTextColor = Color.Gray
                 } finally {
                     isLoading = false
@@ -435,18 +435,11 @@ fun MainAppScreen(
                         fontWeight = FontWeight.Black,
                         color = textColorPrimary
                     )
-                    Text(
-                        text = "ENGINE BY G. SMERDOV",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = textColorSecondary,
-                        letterSpacing = 2.sp
-                    )
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     AnimatedButton(
-                        text = strings["btn_start"] ?: "GET STARTED",
+                        text = strings["btn_start"] ?: "URL Scanner",
                         textColor = Color.White,
                         bgColor = Color(0xFF2979FF),
                         scale = welcomeScale,
@@ -582,7 +575,7 @@ fun MainAppScreen(
                             shape = RoundedCornerShape(16.dp),
                             modifier = Modifier.width(320.dp).height(56.dp)
                         ) {
-                            Text(strings["btn_open_browser"] ?: "OPEN IN BROWSER", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(strings["btn_open_browser"] ?: "Open in browser", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                         }
                         Button(
                             onClick = { isResponseInspectorSheetOpen = true },
@@ -590,7 +583,7 @@ fun MainAppScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = if (isDark) Color(0xFF1E1E24) else Color(0xFF141416), contentColor = Color(0xFFE2E2E6)),
                             shape = RoundedCornerShape(16.dp)
                         ) {
-                            Text(strings["btn_search_data"] ?: "SEARCH RESPONSE DATA", fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                            Text(strings["btn_search_data"] ?: "Search response data", fontWeight = FontWeight.Medium, fontSize = 14.sp)
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                     }
@@ -602,7 +595,7 @@ fun MainAppScreen(
                     } else {
 
                         AnimatedButton(
-                            text = strings["btn_scan"] ?: "RUN SCAN",
+                            text = strings["btn_scan"] ?: "Run scan",
                             textColor = Color.White,
                             bgColor = Color(0xFF2979FF),
                             scale = scanScale,
@@ -611,7 +604,7 @@ fun MainAppScreen(
                         ) { runScan() }
                     }
                     TextButton(onClick = { switchView("welcome") }) {
-                        Text(strings["btn_back"] ?: "← BACK", color = Color(0xFF2979FF), fontSize = 14.sp)
+                        Text(strings["btn_back"] ?: "← Back", color = Color(0xFF2979FF), fontSize = 14.sp)
                     }
                 }
             }
@@ -645,7 +638,7 @@ fun MainAppScreen(
 
 
                     Text(
-                        text = strings["info"] ?: "INFORMATION",
+                        text = strings["info"] ?: "Information",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = dropdownTextColor
@@ -769,7 +762,7 @@ fun MainAppScreen(
 
 
                     Text(
-                        text = strings["settings"] ?: "SETTINGS",
+                        text = strings["settings"] ?: "Settings",
                         fontWeight = FontWeight.Bold
                     )
 
@@ -871,7 +864,7 @@ fun MainAppScreen(
 
 
                     Text(
-                        text = strings["history_title"] ?: "REQUEST HISTORY",
+                        text = strings["history_title"] ?: "Request history",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -879,7 +872,7 @@ fun MainAppScreen(
 
                     if (searchHistory.isEmpty()) {
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            // Локализованный текст пустой истории
+
                             Text(
                                 text = strings["history_empty"] ?: "History is empty",
                                 fontSize = 14.sp
@@ -954,7 +947,7 @@ fun MainAppScreen(
 
 
                     Text(
-                        strings["inspector_title"] ?: "SERVER RESPONSE DATA",
+                        strings["inspector_title"] ?: "Server response data",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = dropdownTextColor
@@ -980,7 +973,7 @@ fun MainAppScreen(
                         modifier = Modifier.fillMaxWidth().height(48.dp)
                     ) {
                         Text(
-                            strings["btn_open_browser_emoji"] ?: "OPEN SITE IN BROWSER 🌐",
+                            strings["btn_open_browser_emoji"] ?: "Open site in browser",
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp
                         )
@@ -997,7 +990,7 @@ fun MainAppScreen(
                             .padding(2.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        listOf("BODY", "HEADERS", "COOKIES").forEach { tab ->
+                        listOf("Body", "Headers", "Cookies").forEach { tab ->
                             val isSelected = activeSearchTab == tab
                             TextButton(
                                 onClick = { activeSearchTab = tab },
