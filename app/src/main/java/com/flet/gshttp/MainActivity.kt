@@ -76,6 +76,3 @@ fun trackEvent(context: Context, scope: CoroutineScope, eventName: String) {
         try { client.newCall(request).execute().close() } catch (e: Exception) {}
     }
 }
-
-
-

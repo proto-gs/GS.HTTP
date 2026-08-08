@@ -1,5 +1,6 @@
 package com.flet.gshttp
 
+import androidx.compose.foundation.clickable
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -45,6 +46,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Tab
@@ -102,6 +104,10 @@ fun MainAppScreen(
     themeSetting: String,
     onThemeChange: (String) -> Unit
 ) {
+
+
+
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -120,6 +126,9 @@ fun MainAppScreen(
             "info" to if (currentLanguage == "ru") "Информация" else "Information",
             "dev_site" to if (currentLanguage == "ru") "Сайт разработчика" else "Developer Website",
             "settings" to if (currentLanguage == "ru") "Настройки" else "Settings",
+            "settings_title" to if (currentLanguage == "ru") "Настройки приложения" else "App Settings",
+            "network_section" to if (currentLanguage == "ru") "Сеть и подключение" else "Network & Connection",
+            "ssl_section" to if (currentLanguage == "ru") "Безопасность и SSL" else "Security & SSL",
             "developer" to if (currentLanguage == "ru") "Разработчик: Георгий Смердов" else "Developer: Georgy Smerdov",
             "version" to if (currentLanguage == "ru") "Версия" else "Version",
             "downloaded_from" to if (currentLanguage == "ru") "Скачано: RuStore" else "Downloaded from: RuStore",
@@ -134,6 +143,7 @@ fun MainAppScreen(
             "btn_open_browser" to if (currentLanguage == "ru") "Открыть в браузере" else "Open in browser",
             "btn_open_browser_emoji" to if (currentLanguage == "ru") "Открыть сайт в браузере" else "Open site in browser",
             "btn_search_data" to if (currentLanguage == "ru") "Поиск по данным ответа" else "Search response data",
+            "btn_done" to if (currentLanguage == "ru") "Готово" else "Done",
 
             "placeholder_url" to if (currentLanguage == "ru") "Проверить URL" else "Check URL",
             "search_log_placeholder" to if (currentLanguage == "ru") "Поиск текста внутри лога..." else "Search text inside log...",
@@ -146,6 +156,13 @@ fun MainAppScreen(
 
             "auto_redirect" to if (currentLanguage == "ru") "Авто-редирект" else "Auto-redirect",
             "auto_redirect_sub" to if (currentLanguage == "ru") "Следовать перенаправлениям сайтов" else "Follow website redirects",
+            "timeout_label" to if (currentLanguage == "ru") "Таймаут запроса" else "Request Timeout",
+            "verify_ssl" to if (currentLanguage == "ru") "Проверять SSL" else "Verify SSL",
+            "verify_ssl_sub" to if (currentLanguage == "ru") "строгая проверка сертификата" else "strict certificate check",
+            "ignore_ssl" to if (currentLanguage == "ru") "Игнорировать SSL ошибки" else "Ignore SSL Errors",
+            "ignore_ssl_sub" to if (currentLanguage == "ru") "самоподписанные сертификаты" else "self-signed certificates",
+            "user_agent" to if (currentLanguage == "ru") "User-Agent" else "User-Agent",
+            "user_agent_default" to if (currentLanguage == "ru") "По умолчанию" else "Default",
             "clear_history" to if (currentLanguage == "ru") "Очистить историю ввода" else "Clear input history",
 
             "theme_btn" to if (currentLanguage == "ru") "Тема оформления" else "App Theme",
@@ -173,7 +190,12 @@ fun MainAppScreen(
     var isBottomSheetOpen by remember { mutableStateOf(false) }
     var isSettingsSheetOpen by remember { mutableStateOf(false) }
     var isMenuExpanded by remember { mutableStateOf(false) }
-    var followRedirectsSetting by remember { mutableStateOf(true) }
+
+
+    var requestTimeout by remember { mutableStateOf(10f) }
+    var verifySslSetting by remember { mutableStateOf(true) }
+    var ignoreSslSetting by remember { mutableStateOf(false) }
+
     var isThemeDialogOpen by remember { mutableStateOf(false) }
     var urlInput by remember { mutableStateOf("") }
     var resText by remember { mutableStateOf("") }
@@ -182,7 +204,7 @@ fun MainAppScreen(
     var safeTextColor by remember { mutableStateOf(Color.Unspecified) }
     var isLoading by remember { mutableStateOf(false) }
 
-    var selectedMethod by remember { mutableStateOf("GET") }
+
     var searchHistory by remember { mutableStateOf(setOf<String>()) }
 
     LaunchedEffect(Unit) {
@@ -197,7 +219,9 @@ fun MainAppScreen(
     var lastValidUrl by remember { mutableStateOf("") }
 
     var searchQuery by remember { mutableStateOf("") }
-    var activeSearchTab by remember { mutableStateOf("Body") }
+
+
+
 
     val settingsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val infoSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
@@ -208,7 +232,48 @@ fun MainAppScreen(
     var isResponseInspectorSheetOpen by remember { mutableStateOf(false) }
 
     var isScanPressed by remember { mutableStateOf(false) }
+    var activeSearchTab by remember { mutableStateOf("Body") }
 
+
+    var userAgentInput by remember { mutableStateOf("GS.HTTP/1.0") }
+    var requestTimeoutText by remember { mutableStateOf("10") }
+    var followRedirectsSetting by remember { mutableStateOf(true) }
+    var selectedMethod by remember { mutableStateOf("GET") }
+
+    val newTheme = "dark"
+    onThemeChange(newTheme)
+    scope.launch(Dispatchers.IO) {
+        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putString("theme_setting", newTheme)
+            .apply()
+    }
+
+    val newLang = "ru"
+    currentLanguage = newLang
+    scope.launch(Dispatchers.IO) {
+        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putString("lang_setting", newLang)
+            .apply()
+    }
+    LaunchedEffect(Unit) {
+        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+
+        userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
+        requestTimeoutText = sharedPref.getString("timeout_setting", "10") ?: "10"
+        followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
+        selectedMethod = sharedPref.getString("method_setting", "GET") ?: "GET"
+
+
+        val savedTheme = sharedPref.getString("theme_setting", "system") ?: "system"
+        onThemeChange(savedTheme)
+
+        val savedLang = sharedPref.getString("lang_setting", "ru") ?: "ru"
+
+        currentLanguage = savedLang
+    }
     val scanScale by animateFloatAsState(
         targetValue = if (isScanPressed) 0.9f else 1.0f,
         animationSpec = androidx.compose.animation.core.spring(stiffness = 450f, dampingRatio = 0.75f),
@@ -217,6 +282,13 @@ fun MainAppScreen(
 
     LaunchedEffect(Unit) {
         trackEvent(context, scope, "app_open")
+    }
+    LaunchedEffect(Unit) {
+        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
+        requestTimeoutText = sharedPref.getString("timeout_setting", "10") ?: "10"
+        followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
+        selectedMethod = sharedPref.getString("method_setting", "GET") ?: "GET"
     }
 
     val isDark = when (themeSetting) {
@@ -257,6 +329,7 @@ fun MainAppScreen(
         }
     }
 
+
     val runScan: () -> Unit = {
         searchQuery = ""
         val url = urlInput.trim()
@@ -288,13 +361,24 @@ fun MainAppScreen(
 
             scope.launch(Dispatchers.IO) {
                 val fullUrl = if (url.startsWith("http")) url else "https://$url"
+
+
+                val currentAgent = if (userAgentInput.isBlank()) "GS.HTTP/1.0" else userAgentInput
+
+
+                val timeoutLong = requestTimeout.toString().toLongOrNull() ?: 10L
+
                 try {
                     val client = OkHttpClient.Builder()
-                        .connectTimeout(5, TimeUnit.SECONDS)
+                        .connectTimeout(timeoutLong, TimeUnit.SECONDS)
+                        .readTimeout(timeoutLong, TimeUnit.SECONDS)
                         .followRedirects(followRedirectsSetting)
                         .build()
 
-                    val requestBuilder = Request.Builder().url(fullUrl)
+                    val requestBuilder = Request.Builder()
+                        .url(fullUrl)
+                        .header("User-Agent", currentAgent)
+
                     val mediaType = "application/json; charset=utf-8".toMediaType()
                     val emptyBody = ByteArray(0).toRequestBody(mediaType)
 
@@ -334,6 +418,8 @@ fun MainAppScreen(
             }
         }
     }
+
+
 
     var dragAmountSum by remember { mutableStateOf(0f) }
 
@@ -598,7 +684,7 @@ fun MainAppScreen(
             }
         }
 
-        // --- НИЖНИЙ ПЛАВАЮЩИЙ БАР ---
+
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -675,7 +761,7 @@ fun MainAppScreen(
             }
         }
 
-        // Модальные окна и диалоги
+
         if (isBottomSheetOpen) {
             ModalBottomSheet(
                 onDismissRequest = { isBottomSheetOpen = false },
@@ -732,6 +818,16 @@ fun MainAppScreen(
         }
 
         if (isSettingsSheetOpen) {
+
+            LaunchedEffect(Unit) {
+                val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
+                requestTimeout = sharedPref.getFloat("timeout_setting", 10f)
+                verifySslSetting = sharedPref.getBoolean("verify_ssl_setting", true)
+                ignoreSslSetting = sharedPref.getBoolean("ignore_ssl_setting", false)
+                userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
+            }
+
             ModalBottomSheet(
                 onDismissRequest = { isSettingsSheetOpen = false },
                 sheetState = settingsSheetState,
@@ -739,75 +835,269 @@ fun MainAppScreen(
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(28.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.85f)
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    Box(modifier = Modifier.size(width = 36.dp, height = 4.dp).clip(RoundedCornerShape(10.dp)).background(palette.textPrimary.copy(alpha = 0.2f)))
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(text = strings["settings"] ?: "Settings", fontWeight = FontWeight.Bold, color = palette.textPrimary)
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier
+                            .size(width = 36.dp, height = 4.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(palette.textPrimary.copy(alpha = 0.2f))
+                            .align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = strings["settings_title"] ?: "App Settings",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = palette.textPrimary,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Column {
-                            Text(text = strings["auto_redirect"] ?: "Auto-redirect", color = palette.textPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium)
-                            Text(text = strings["auto_redirect_sub"] ?: "Follow website redirects", color = palette.textSecondary, fontSize = 12.sp)
+                        item {
+                            Text(strings["network_section"] ?: "", fontSize = 12.sp, color = palette.textSecondary, fontWeight = FontWeight.SemiBold)
                         }
-                        Switch(
-                            checked = followRedirectsSetting,
-                            onCheckedChange = { followRedirectsSetting = it },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = palette.bgPrimary,
-                                checkedTrackColor = palette.textPrimary,
-                                uncheckedThumbColor = palette.textSecondary,
-                                uncheckedTrackColor = palette.bgElevated
-                            )
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = { isThemeDialogOpen = true },
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = palette.bgElevated, contentColor = palette.textPrimary)
-                    ) {
-                        val themeText = when(themeSetting) {
-                            "dark" -> strings["theme_dark"] ?: "Dark"
-                            "light" -> strings["theme_light"] ?: "Light"
-                            else -> strings["theme_system"] ?: "System default"
+
+                        item {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(text = strings["auto_redirect"] ?: "", color = palette.textPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                                    Text(text = strings["auto_redirect_sub"] ?: "", color = palette.textSecondary, fontSize = 12.sp)
+                                }
+                                Switch(
+                                    checked = followRedirectsSetting,
+                                    onCheckedChange = { newValue ->
+                                        followRedirectsSetting = newValue
+                                        scope.launch(Dispatchers.IO) {
+                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putBoolean("redirects_setting", newValue)
+                                                .apply()
+                                        }
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = palette.bgPrimary,
+                                        checkedTrackColor = palette.textPrimary,
+                                        uncheckedThumbColor = palette.textSecondary,
+                                        uncheckedTrackColor = palette.bgElevated
+                                    )
+                                )
+                            }
                         }
-                        Text(text = "${strings["theme_btn"] ?: "App Theme"}: $themeText", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+
+                        item {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(text = "${strings["timeout_label"]}: ${requestTimeout.toInt()}с", color = palette.textPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                                Slider(
+                                    value = requestTimeout,
+                                    onValueChange = { newValue ->
+                                        requestTimeout = newValue
+                                    },
+                                    onValueChangeFinished = {
+
+                                        scope.launch(Dispatchers.IO) {
+                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putFloat("timeout_setting", requestTimeout)
+                                                .apply()
+                                        }
+                                    },
+                                    valueRange = 1f..30f,
+                                    steps = 29
+                                )
+                            }
+                        }
+                        item { Divider(color = palette.line, thickness = 0.5.dp) }
+                        item {
+                            Text(strings["ssl_section"] ?: "", fontSize = 12.sp, color = palette.textSecondary, fontWeight = FontWeight.SemiBold)
+                        }
+
+                        item {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(text = strings["verify_ssl"] ?: "", color = palette.textPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                                    Text(text = strings["verify_ssl_sub"] ?: "", color = palette.textSecondary, fontSize = 12.sp)
+                                }
+                                Switch(
+                                    checked = verifySslSetting,
+                                    onCheckedChange = { newValue ->
+                                        verifySslSetting = newValue
+                                        scope.launch(Dispatchers.IO) {
+                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putBoolean("verify_ssl_setting", newValue)
+                                                .apply()
+                                        }
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = palette.bgPrimary,
+                                        checkedTrackColor = palette.textPrimary,
+                                        uncheckedThumbColor = palette.textSecondary,
+                                        uncheckedTrackColor = palette.bgElevated
+                                    )
+                                )
+                            }
+                        }
+
+                        item {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(text = strings["ignore_ssl"] ?: "", color = palette.textPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                                    Text(text = strings["ignore_ssl_sub"] ?: "", color = palette.textSecondary, fontSize = 12.sp)
+                                }
+                                Switch(
+                                    checked = ignoreSslSetting,
+                                    onCheckedChange = { newValue ->
+                                        ignoreSslSetting = newValue
+                                        scope.launch(Dispatchers.IO) {
+                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putBoolean("ignore_ssl_setting", newValue)
+                                                .apply()
+                                        }
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = palette.bgPrimary,
+                                        checkedTrackColor = palette.textPrimary,
+                                        uncheckedThumbColor = palette.textSecondary,
+                                        uncheckedTrackColor = palette.bgElevated
+                                    )
+                                )
+                            }
+                        }
+
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = strings["user_agent"] ?: "User-Agent",
+                                        color = palette.textPrimary,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+
+                                    Text(
+                                        text = "По умолчанию",
+                                        color = palette.accent,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        modifier = Modifier.clickable {
+                                            userAgentInput = "GS.HTTP/1.0"
+                                            scope.launch(Dispatchers.IO) {
+                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putString("user_agent_setting", "GS.HTTP/1.0")
+                                                    .apply()
+                                            }
+                                        }
+                                    )
+                                }
+
+                                TextField(
+                                    value = userAgentInput,
+                                    onValueChange = { newValue ->
+                                        userAgentInput = newValue
+                                        val finalAgent = if (newValue.isBlank()) "GS.HTTP/1.0" else newValue
+                                        scope.launch(Dispatchers.IO) {
+                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putString("user_agent_setting", finalAgent)
+                                                .apply()
+                                        }
+                                    },
+                                    placeholder = { Text("GS.HTTP/1.0", color = palette.textSecondary.copy(alpha = 0.7f)) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    singleLine = true,
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = TextFieldDefaults.colors(
+                                        focusedContainerColor = palette.bgPrimary,
+                                        unfocusedContainerColor = palette.bgPrimary,
+                                        focusedIndicatorColor = Color.Transparent,
+                                        unfocusedIndicatorColor = Color.Transparent,
+                                        focusedTextColor = palette.textPrimary,
+                                        unfocusedTextColor = palette.textPrimary
+                                    )
+                                )
+                            }
+                        }
+
+                        item { Divider(color = palette.line, thickness = 0.5.dp) }
+
+
+                        item {
+                            Button(
+                                onClick = { isThemeDialogOpen = true },
+                                modifier = Modifier.fillMaxWidth().height(48.dp),
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = palette.bgElevated, contentColor = palette.textPrimary)
+                            ) {
+                                val themeText = when(themeSetting) {
+                                    "dark" -> strings["theme_dark"] ?: "Dark"
+                                    "light" -> strings["theme_light"] ?: "Light"
+                                    else -> strings["theme_system"] ?: "System default"
+                                }
+                                Text(text = "${strings["theme_btn"] ?: "App Theme"}: $themeText", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                            }
+                        }
+                        item {
+                            Button(
+                                onClick = { isLanguageDialogOpen = true },
+                                modifier = Modifier.fillMaxWidth().height(48.dp),
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = palette.bgElevated, contentColor = palette.textPrimary)
+                            ) {
+                                val langText = if (currentLanguage == "ru") "Русский" else "English"
+                                Text(text = "${strings["lang_btn"] ?: "Language"}: $langText", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                            }
+                        }
+                        item {
+                            Button(
+                                onClick = {
+                                    urlInput = ""
+                                    resText = ""
+                                    safeText = ""
+                                    searchHistory = emptySet()
+                                    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                    sharedPref.edit().remove("local_search_history").apply()
+                                    isSettingsSheetOpen = false
+                                },
+                                modifier = Modifier.fillMaxWidth().height(48.dp),
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = palette.bgElevated, contentColor = palette.textPrimary)
+                            ) {
+                                Text(text = strings["clear_history"] ?: "Clear input history", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                            }
+                        }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Spacer(modifier = Modifier.height(12.dp))
                     Button(
-                        onClick = { isLanguageDialogOpen = true },
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        onClick = { isSettingsSheetOpen = false },
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = palette.bgElevated, contentColor = palette.textPrimary)
+                        colors = ButtonDefaults.buttonColors(containerColor = palette.textPrimary, contentColor = palette.bgPrimary)
                     ) {
-                        val langText = if (currentLanguage == "ru") "Русский" else "English"
-                        Text(text = "${strings["lang_btn"] ?: "Language"}: $langText", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                        Text(text = strings["btn_done"] ?: "Done", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = {
-                            urlInput = ""
-                            resText = ""
-                            safeText = ""
-                            searchHistory = emptySet()
-                            val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                            sharedPref.edit().remove("local_search_history").apply()
-                            isSettingsSheetOpen = false
-                        },
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = palette.bgElevated, contentColor = palette.textPrimary)
-                    ) {
-                        Text(text = strings["clear_history"] ?: "Clear input history", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
