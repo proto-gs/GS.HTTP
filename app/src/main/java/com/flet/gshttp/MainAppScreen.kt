@@ -1,3 +1,4 @@
+
 package com.flet.gshttp
 
 import androidx.compose.foundation.clickable
@@ -104,10 +105,6 @@ fun MainAppScreen(
     themeSetting: String,
     onThemeChange: (String) -> Unit
 ) {
-
-
-
-
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -117,8 +114,12 @@ fun MainAppScreen(
     var currentLanguage by remember { mutableStateOf(initialLang) }
 
     LaunchedEffect(Unit) {
-        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        currentLanguage = sharedPref.getString("app_lang", initialLang) ?: initialLang
+        try {
+            val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            currentLanguage = sharedPref.getString("app_lang", initialLang) ?: initialLang
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     val strings = remember(currentLanguage) {
@@ -191,7 +192,6 @@ fun MainAppScreen(
     var isSettingsSheetOpen by remember { mutableStateOf(false) }
     var isMenuExpanded by remember { mutableStateOf(false) }
 
-
     var requestTimeout by remember { mutableStateOf(10f) }
     var verifySslSetting by remember { mutableStateOf(true) }
     var ignoreSslSetting by remember { mutableStateOf(false) }
@@ -204,13 +204,17 @@ fun MainAppScreen(
     var safeTextColor by remember { mutableStateOf(Color.Unspecified) }
     var isLoading by remember { mutableStateOf(false) }
 
-
     var searchHistory by remember { mutableStateOf(setOf<String>()) }
 
     LaunchedEffect(Unit) {
-        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        val savedHistory = sharedPref.getStringSet("local_search_history", emptySet()) ?: emptySet()
-        searchHistory = savedHistory
+        try {
+            val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            val savedHistory = sharedPref.getStringSet("local_search_history", emptySet())
+            searchHistory = savedHistory?.toSet() ?: emptySet()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            searchHistory = emptySet()
+        }
     }
 
     var responseBodyText by remember { mutableStateOf("") }
@@ -219,9 +223,6 @@ fun MainAppScreen(
     var lastValidUrl by remember { mutableStateOf("") }
 
     var searchQuery by remember { mutableStateOf("") }
-
-
-
 
     val settingsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val infoSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
@@ -234,46 +235,11 @@ fun MainAppScreen(
     var isScanPressed by remember { mutableStateOf(false) }
     var activeSearchTab by remember { mutableStateOf("Body") }
 
-
     var userAgentInput by remember { mutableStateOf("GS.HTTP/1.0") }
     var requestTimeoutText by remember { mutableStateOf("10") }
     var followRedirectsSetting by remember { mutableStateOf(true) }
     var selectedMethod by remember { mutableStateOf("GET") }
 
-    val newTheme = "dark"
-    onThemeChange(newTheme)
-    scope.launch(Dispatchers.IO) {
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("theme_setting", newTheme)
-            .apply()
-    }
-
-    val newLang = "ru"
-    currentLanguage = newLang
-    scope.launch(Dispatchers.IO) {
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("lang_setting", newLang)
-            .apply()
-    }
-    LaunchedEffect(Unit) {
-        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-
-
-        userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
-        requestTimeoutText = sharedPref.getString("timeout_setting", "10") ?: "10"
-        followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
-        selectedMethod = sharedPref.getString("method_setting", "GET") ?: "GET"
-
-
-        val savedTheme = sharedPref.getString("theme_setting", "system") ?: "system"
-        onThemeChange(savedTheme)
-
-        val savedLang = sharedPref.getString("lang_setting", "ru") ?: "ru"
-
-        currentLanguage = savedLang
-    }
     val scanScale by animateFloatAsState(
         targetValue = if (isScanPressed) 0.9f else 1.0f,
         animationSpec = androidx.compose.animation.core.spring(stiffness = 450f, dampingRatio = 0.75f),
@@ -281,14 +247,23 @@ fun MainAppScreen(
     )
 
     LaunchedEffect(Unit) {
-        trackEvent(context, scope, "app_open")
+        try {
+            trackEvent(context, scope, "app_open")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
+
     LaunchedEffect(Unit) {
-        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
-        requestTimeoutText = sharedPref.getString("timeout_setting", "10") ?: "10"
-        followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
-        selectedMethod = sharedPref.getString("method_setting", "GET") ?: "GET"
+        try {
+            val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
+            requestTimeoutText = sharedPref.getString("timeout_setting", "10") ?: "10"
+            followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
+            selectedMethod = sharedPref.getString("method_setting", "GET") ?: "GET"
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     val isDark = when (themeSetting) {
@@ -324,11 +299,14 @@ fun MainAppScreen(
 
     val switchView: (String) -> Unit = { target ->
         scope.launch {
-            if (target == "main") trackEvent(context, scope, "view_scan_screen")
-            currentView = target
+            try {
+                if (target == "main") trackEvent(context, scope, "view_scan_screen")
+                currentView = target
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
-
 
     val runScan: () -> Unit = {
         searchQuery = ""
@@ -342,7 +320,11 @@ fun MainAppScreen(
             safeText = strings["status_invalid"] ?: "Invalid input"
             isLoading = false
         } else {
-            trackEvent(context, scope, "run_scan_action")
+            try {
+                trackEvent(context, scope, "run_scan_action")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             isLoading = true
             resText = ""
             safeText = ""
@@ -355,18 +337,18 @@ fun MainAppScreen(
             searchHistory = updatedHistory
 
             scope.launch(Dispatchers.IO) {
-                val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                sharedPref.edit().putStringSet("local_search_history", updatedHistory).apply()
+                try {
+                    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    sharedPref.edit().putStringSet("local_search_history", updatedHistory).apply()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             scope.launch(Dispatchers.IO) {
                 val fullUrl = if (url.startsWith("http")) url else "https://$url"
-
-
                 val currentAgent = if (userAgentInput.isBlank()) "GS.HTTP/1.0" else userAgentInput
-
-
-                val timeoutLong = requestTimeout.toString().toLongOrNull() ?: 10L
+                val timeoutLong = requestTimeout.toLong().coerceAtLeast(1L)
 
                 try {
                     val client = OkHttpClient.Builder()
@@ -407,19 +389,28 @@ fun MainAppScreen(
                         }
                     }
                 } catch (e: IllegalArgumentException) {
-                    resText = strings["status_error"] ?: "Error"
-                    safeText = strings["status_invalid"] ?: "Invalid input"
+                    withContext(Dispatchers.Main) {
+                        resText = strings["status_error"] ?: "Error"
+                        safeText = strings["status_invalid"] ?: "Invalid input"
+                    }
                 } catch (e: IOException) {
-                    resText = strings["status_error"] ?: "Error"
-                    safeText = strings["status_no_server"] ?: "Server unreachable"
+                    withContext(Dispatchers.Main) {
+                        resText = strings["status_error"] ?: "Error"
+                        safeText = strings["status_no_server"] ?: "Server unreachable"
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        resText = strings["status_error"] ?: "Error"
+                        safeText = strings["status_error"] ?: "Error"
+                    }
                 } finally {
-                    isLoading = false
+                    withContext(Dispatchers.Main) {
+                        isLoading = false
+                    }
                 }
             }
         }
     }
-
-
 
     var dragAmountSum by remember { mutableStateOf(0f) }
 
@@ -484,9 +475,13 @@ fun MainAppScreen(
                             text = { Text(strings["dev_site"] ?: "Developer Website", color = palette.textPrimary) },
                             onClick = {
                                 isMenuExpanded = false
-                                trackEvent(context, scope, "click_dev_site")
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gs-ht.ru"))
-                                context.startActivity(intent)
+                                try {
+                                    trackEvent(context, scope, "click_dev_site")
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gs-ht.ru"))
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
                         )
                         DropdownMenuItem(
@@ -684,7 +679,6 @@ fun MainAppScreen(
             }
         }
 
-
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -761,7 +755,6 @@ fun MainAppScreen(
             }
         }
 
-
         if (isBottomSheetOpen) {
             ModalBottomSheet(
                 onDismissRequest = { isBottomSheetOpen = false },
@@ -818,14 +811,17 @@ fun MainAppScreen(
         }
 
         if (isSettingsSheetOpen) {
-
             LaunchedEffect(Unit) {
-                val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
-                requestTimeout = sharedPref.getFloat("timeout_setting", 10f)
-                verifySslSetting = sharedPref.getBoolean("verify_ssl_setting", true)
-                ignoreSslSetting = sharedPref.getBoolean("ignore_ssl_setting", false)
-                userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
+                try {
+                    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    followRedirectsSetting = sharedPref.getBoolean("redirects_setting", true)
+                    requestTimeout = sharedPref.getFloat("timeout_setting", 10f)
+                    verifySslSetting = sharedPref.getBoolean("verify_ssl_setting", true)
+                    ignoreSslSetting = sharedPref.getBoolean("ignore_ssl_setting", false)
+                    userAgentInput = sharedPref.getString("user_agent_setting", "GS.HTTP/1.0") ?: "GS.HTTP/1.0"
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             ModalBottomSheet(
@@ -879,10 +875,14 @@ fun MainAppScreen(
                                     onCheckedChange = { newValue ->
                                         followRedirectsSetting = newValue
                                         scope.launch(Dispatchers.IO) {
-                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                                .edit()
-                                                .putBoolean("redirects_setting", newValue)
-                                                .apply()
+                                            try {
+                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putBoolean("redirects_setting", newValue)
+                                                    .apply()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
                                         }
                                     },
                                     colors = SwitchDefaults.colors(
@@ -904,12 +904,15 @@ fun MainAppScreen(
                                         requestTimeout = newValue
                                     },
                                     onValueChangeFinished = {
-
                                         scope.launch(Dispatchers.IO) {
-                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                                .edit()
-                                                .putFloat("timeout_setting", requestTimeout)
-                                                .apply()
+                                            try {
+                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putFloat("timeout_setting", requestTimeout)
+                                                    .apply()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
                                         }
                                     },
                                     valueRange = 1f..30f,
@@ -933,10 +936,14 @@ fun MainAppScreen(
                                     onCheckedChange = { newValue ->
                                         verifySslSetting = newValue
                                         scope.launch(Dispatchers.IO) {
-                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                                .edit()
-                                                .putBoolean("verify_ssl_setting", newValue)
-                                                .apply()
+                                            try {
+                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putBoolean("verify_ssl_setting", newValue)
+                                                    .apply()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
                                         }
                                     },
                                     colors = SwitchDefaults.colors(
@@ -960,10 +967,14 @@ fun MainAppScreen(
                                     onCheckedChange = { newValue ->
                                         ignoreSslSetting = newValue
                                         scope.launch(Dispatchers.IO) {
-                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                                .edit()
-                                                .putBoolean("ignore_ssl_setting", newValue)
-                                                .apply()
+                                            try {
+                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putBoolean("ignore_ssl_setting", newValue)
+                                                    .apply()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
                                         }
                                     },
                                     colors = SwitchDefaults.colors(
@@ -1003,10 +1014,14 @@ fun MainAppScreen(
                                         modifier = Modifier.clickable {
                                             userAgentInput = "GS.HTTP/1.0"
                                             scope.launch(Dispatchers.IO) {
-                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                                    .edit()
-                                                    .putString("user_agent_setting", "GS.HTTP/1.0")
-                                                    .apply()
+                                                try {
+                                                    context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                        .edit()
+                                                        .putString("user_agent_setting", "GS.HTTP/1.0")
+                                                        .apply()
+                                                } catch (e: Exception) {
+                                                    e.printStackTrace()
+                                                }
                                             }
                                         }
                                     )
@@ -1018,10 +1033,14 @@ fun MainAppScreen(
                                         userAgentInput = newValue
                                         val finalAgent = if (newValue.isBlank()) "GS.HTTP/1.0" else newValue
                                         scope.launch(Dispatchers.IO) {
-                                            context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                                .edit()
-                                                .putString("user_agent_setting", finalAgent)
-                                                .apply()
+                                            try {
+                                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putString("user_agent_setting", finalAgent)
+                                                    .apply()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
                                         }
                                     },
                                     placeholder = { Text("GS.HTTP/1.0", color = palette.textSecondary.copy(alpha = 0.7f)) },
@@ -1041,7 +1060,6 @@ fun MainAppScreen(
                         }
 
                         item { Divider(color = palette.line, thickness = 0.5.dp) }
-
 
                         item {
                             Button(
@@ -1076,8 +1094,12 @@ fun MainAppScreen(
                                     resText = ""
                                     safeText = ""
                                     searchHistory = emptySet()
-                                    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                                    sharedPref.edit().remove("local_search_history").apply()
+                                    try {
+                                        val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                        sharedPref.edit().remove("local_search_history").apply()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
                                     isSettingsSheetOpen = false
                                 },
                                 modifier = Modifier.fillMaxWidth().height(48.dp),
@@ -1288,14 +1310,14 @@ fun MainAppScreen(
                             Text("Светлая", color = palette.textPrimary)
                         }
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                            RadioButton(
-                                selected = themeSetting == "dark",
-                                onClick = { onThemeChange("dark"); isThemeDialogOpen = false },
-                                colors = RadioButtonDefaults.colors(selectedColor = palette.textPrimary, unselectedColor = palette.textSecondary)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Тёмная", color = palette.textPrimary)
-                        }
+                        RadioButton(
+                            selected = themeSetting == "dark",
+                            onClick = { onThemeChange("dark"); isThemeDialogOpen = false },
+                            colors = RadioButtonDefaults.colors(selectedColor = palette.textPrimary, unselectedColor = palette.textSecondary)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Тёмная", color = palette.textPrimary)
+                    }
                     }
                 },
                 confirmButton = {
@@ -1318,7 +1340,11 @@ fun MainAppScreen(
                             selected = currentLanguage == "ru",
                             onClick = {
                                 currentLanguage = "ru"
-                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit().putString("app_lang", "ru").apply()
+                                try {
+                                    context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit().putString("app_lang", "ru").apply()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                                 isLanguageDialogOpen = false
                             },
                             colors = RadioButtonDefaults.colors(selectedColor = palette.textPrimary, unselectedColor = palette.textSecondary)
@@ -1331,7 +1357,11 @@ fun MainAppScreen(
                             selected = currentLanguage == "en",
                             onClick = {
                                 currentLanguage = "en"
-                                context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit().putString("app_lang", "en").apply()
+                                try {
+                                    context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit().putString("app_lang", "en").apply()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                                 isLanguageDialogOpen = false
                             },
                             colors = RadioButtonDefaults.colors(selectedColor = palette.textPrimary, unselectedColor = palette.textSecondary)
@@ -1349,3 +1379,4 @@ fun MainAppScreen(
         )
     }
 }
+
