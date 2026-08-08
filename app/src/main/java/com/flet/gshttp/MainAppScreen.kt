@@ -77,6 +77,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -196,7 +197,7 @@ fun MainAppScreen(
     var lastValidUrl by remember { mutableStateOf("") }
 
     var searchQuery by remember { mutableStateOf("") }
-    var activeSearchTab by remember { mutableStateOf("BODY") }
+    var activeSearchTab by remember { mutableStateOf("Body") }
 
     val settingsSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val infoSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
@@ -257,6 +258,7 @@ fun MainAppScreen(
     }
 
     val runScan: () -> Unit = {
+        searchQuery = ""
         val url = urlInput.trim()
         val hasSpaces = url.contains(" ")
         val isInvalidProtocol = (url.startsWith("https:/") && !url.startsWith("https://")) ||
@@ -305,14 +307,20 @@ fun MainAppScreen(
 
                     client.newCall(requestBuilder.build()).execute().use { response ->
                         val code = response.code
-                        resText = "HTTP $code"
                         val isHttps = response.request.url.isHttps
-                        safeText = if (isHttps) strings["status_ssl"] ?: "" else strings["status_http"] ?: ""
-                        lastValidUrl = fullUrl
-                        responseBodyText = response.body?.string() ?: ""
-                        responseHeadersText = response.headers.joinToString("\n") { "${it.first}: ${it.second}" }
-                        val cookies = response.headers("Set-Cookie")
-                        responseCookiesText = if (cookies.isNotEmpty()) cookies.joinToString("\n") else strings["cookies_empty"] ?: ""
+                        val body = response.body?.string() ?: ""
+                        val headers = response.headers.joinToString("\n") { "${it.first}: ${it.second}" }
+                        val cookiesList = response.headers("Set-Cookie")
+                        val cookies = if (cookiesList.isNotEmpty()) cookiesList.joinToString("\n") else strings["cookies_empty"] ?: ""
+
+                        withContext(Dispatchers.Main) {
+                            resText = "HTTP $code"
+                            safeText = if (isHttps) strings["status_ssl"] ?: "" else strings["status_http"] ?: ""
+                            responseBodyText = body
+                            responseHeadersText = headers
+                            responseCookiesText = cookies
+                            lastValidUrl = fullUrl
+                        }
                     }
                 } catch (e: IllegalArgumentException) {
                     resText = strings["status_error"] ?: "Error"
@@ -923,9 +931,10 @@ fun MainAppScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     val currentTextData = when (activeSearchTab) {
-                        "BODY" -> responseBodyText
-                        "HEADERS" -> responseHeadersText
-                        else -> responseCookiesText
+                        "Body" -> responseBodyText
+                        "Headers" -> responseHeadersText
+                        "Cookies" -> responseCookiesText
+                        else -> ""
                     }
                     val filteredText = if (searchQuery.isEmpty()) {
                         currentTextData
@@ -946,7 +955,12 @@ fun MainAppScreen(
                         LazyColumn(modifier = Modifier.fillMaxSize()) {
                             item {
                                 Text(
-                                    text = if (filteredText.trim().isEmpty() && searchQuery.isNotEmpty()) (strings["not_found"] ?: "Nothing found") else filteredText,
+                                    text = if (filteredText.trim().isEmpty()) {
+                                        if (searchQuery.isNotEmpty()) (strings["not_found"] ?: "Nothing found")
+                                        else if (activeSearchTab == "Cookies") (strings["cookies_empty"] ?: "No cookies")
+                                        else if (activeSearchTab == "Body") (if (currentLanguage == "ru") "Тело ответа пустое" else "Response body is empty")
+                                        else (if (currentLanguage == "ru") "Нет данных" else "No data")
+                                    } else filteredText,
                                     color = palette.textPrimary,
                                     fontSize = 12.sp,
                                     fontFamily = FontFamily.Monospace
