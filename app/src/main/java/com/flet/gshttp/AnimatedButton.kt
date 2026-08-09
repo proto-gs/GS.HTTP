@@ -1,4 +1,4 @@
-package com.flet.gshttp
+package com.proxy.gshttp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures

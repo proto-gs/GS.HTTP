@@ -1,4 +1,4 @@
-package com.flet.gshttp
+package com.proxy.gshttp
 
 import android.content.Context
 import android.os.Bundle
@@ -19,7 +19,7 @@ import org.json.JSONObject
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-const val VERSION = "1.0.4"
+const val VERSION = "1.0.6"
 const val SDK_ID = "YOUR_SDK_ID"
 
 

@@ -1,5 +1,5 @@
 
-package com.flet.gshttp
+package com.proxy.gshttp
 
 import androidx.compose.foundation.clickable
 import android.content.Context
@@ -132,7 +132,7 @@ fun MainAppScreen(
             "ssl_section" to if (currentLanguage == "ru") "Безопасность и SSL" else "Security & SSL",
             "developer" to if (currentLanguage == "ru") "Разработчик: Георгий Смердов" else "Developer: Georgy Smerdov",
             "version" to if (currentLanguage == "ru") "Версия" else "Version",
-            "downloaded_from" to if (currentLanguage == "ru") "Скачано: RuStore" else "Downloaded from: RuStore",
+            "downloaded_from" to if (currentLanguage == "ru") "Скачано: GitHub" else "Downloaded from: GitHub",
             "privacy_policy" to if (currentLanguage == "ru") "Политика конфиденциальности" else "Privacy Policy",
             "source_code" to if (currentLanguage == "ru") "Исходный код" else "Source Code",
 
@@ -773,7 +773,7 @@ fun MainAppScreen(
                     Text(text = strings["developer"] ?: "Developer: Georgy Smerdov", fontSize = 14.sp, color = palette.textSecondary)
                     Text(text = "${strings["version"] ?: "Version"}: $VERSION", fontSize = 12.sp, color = palette.textPrimary)
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(text = strings["downloaded_from"] ?: "Downloaded from: RuStore", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = palette.textSecondary)
+                    Text(text = strings["downloaded_from"] ?: "Downloaded from: GitHub", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = palette.textSecondary)
                     Spacer(modifier = Modifier.height(16.dp))
                     Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp), thickness = 1.dp, color = palette.line)
                     Spacer(modifier = Modifier.height(12.dp))
