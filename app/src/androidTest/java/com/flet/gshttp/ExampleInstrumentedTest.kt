@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.flet.gshttp", appContext.packageName)
+        assertEquals("com.flet.com.proxy.gshttp", appContext.packageName)
     }
 }

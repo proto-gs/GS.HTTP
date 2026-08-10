@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.proxy.gshttp"
+        applicationId = "com.proxy.com.proxy.gshttp"
         minSdk = 24
         targetSdk = 34
 
