@@ -25,6 +25,12 @@ Using GS.HTTP, you can also:
 • Use popular HTTP methods: GET, POST, HEAD, PUT
 
 • Save everything locally in the request history
+## Clone repository
+There are two full-time IDLE programs where you can easily open and work with a project:
+* AndroidStudio
+* Intelij IDEA
+Once you have downloaded IDLE from the official website, you can clone the repository using the command `$ git clone https://github.com/proto-gs/GS.HTTP`
+For this you will also need git pre-installed.
 ## License
 
 `GS.HTTP` is licensed under the terms of the MIT License.
