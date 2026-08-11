@@ -20,4 +20,10 @@ Using GS.HTTP, you can also:
 • Use popular HTTP methods: GET, POST, HEAD, PUT
 
 • Save everything locally in the request history
+## License
 
+`GS.HTTP` is licensed under the terms of the MIT License.
+
+For more information, see [LICENSE](/LICENSE) file.
+
+License of components and third-party dependencies it relies on might differ, check `LICENSE` file in the corresponding folder.
