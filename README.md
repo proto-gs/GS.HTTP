@@ -33,7 +33,9 @@ Once you have downloaded IDLE from the official website, you can clone the repos
 For this you will also need git pre-installed.<br><br>
 Once you have successfully cloned the repository, all you have to do is compile and run it using `./gradlew`<br>
 To compile the Release version, use the command `./gradlew assembleRelease`<br> To compile the Debug version, use the command `./gradlew assembleDebug`<br>
-To stop compilation, use the command `./gradlew --stop`<br> For help and all the options of `./gradlew` use the command `./gradlew --help`
+To stop compilation, use the command `./gradlew --stop`<br> For help and all the options of `./gradlew` use the command `./gradlew --help`<br><br>
+
+When choosing operating systems, it is recommended to choose Linux.
 ## License
 
 `GS.HTTP` is licensed under the terms of the MIT License.
