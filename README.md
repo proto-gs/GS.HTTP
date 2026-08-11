@@ -29,7 +29,7 @@ Using GS.HTTP, you can also:
 There are two full-time IDLE programs where you can easily open and work with a project:
 * AndroidStudio
 * Intelij IDEA
-Once you have downloaded IDLE from the official website, you can clone the repository using the command `$ git clone https://github.com/proto-gs/GS.HTTP`
+Once you have downloaded IDLE from the official website, you can clone the repository using the command<br> `$ git clone https://github.com/proto-gs/GS.HTTP`<br><br>
 For this you will also need git pre-installed.
 ## License
 
