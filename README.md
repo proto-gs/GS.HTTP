@@ -27,8 +27,8 @@ Using GS.HTTP, you can also:
 • Save everything locally in the request history
 ## Clone repository
 There are two full-time IDLE programs where you can easily open and work with a project:
-* AndroidStudio
-* Intelij IDEA
+* AndroidStudio(recommended)
+* Intelij IDEA<br><br>
 Once you have downloaded IDLE from the official website, you can clone the repository using the command<br> `$ git clone https://github.com/proto-gs/GS.HTTP`<br><br>
 For this you will also need git pre-installed.<br><br>
 Once you have successfully cloned the repository, all you have to do is compile and run it using `./gradlew`<br>
