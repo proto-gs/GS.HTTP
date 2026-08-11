@@ -31,7 +31,7 @@ There are two full-time IDLE programs where you can easily open and work with a 
 * Intelij IDEA
 Once you have downloaded IDLE from the official website, you can clone the repository using the command<br> `$ git clone https://github.com/proto-gs/GS.HTTP`<br><br>
 For this you will also need git pre-installed.<br><br>
-Once you have successfully cloned the repository, all you have to do is compile and run it using `./gradlew`
+Once you have successfully cloned the repository, all you have to do is compile and run it using `./gradlew`<br>
 To compile the Release version, use the command `./gradlew assembleRelease`<br> To compile the Debug version, use the command `./gradlew assembleDebug`<br>
 To stop compilation, use the command `./gradlew --stop`<br> For help and all the options of `./gradlew` use the command `./gradlew --help`
 ## License
