@@ -25,7 +25,7 @@ Using GS.HTTP, you can also:
 • Use popular HTTP methods: GET, POST, HEAD, PUT
 
 • Save everything locally in the request history
-## Clone repository | Building app
+## Clone repository | Building app | Working with the project
 There are two full-time IDLE programs where you can easily open and work with a project:
 * [AndroidStudio](https://developer.android.com/studio)(recommended)
 * [Intelij IDEA](https://www.jetbrains.com/idea/)<br><br>
