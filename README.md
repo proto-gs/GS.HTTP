@@ -12,4 +12,8 @@ With GS HTTP, you can:
 
 • Check cookies set by web resources.
 
-The app is extremely minimalist: it doesn't require registration or collect personal data. Simply enter the website address and click "CHECK." All the necessary functionality is available immediately after launch. The perfect assistant for quickly diagnosing websites right from your smartphone.
+The app is extremely minimalist: it doesn't require registration or collect personal data. Simply enter the website address and click "CHECK." All the necessary functionality is available immediately after launch. The perfect assistant for quickly diagnosing websites right from your smartphone.<br><br>
+Using GS.HTTP, you can also:
+Control and manage application settings
+Use popular HTTP methods: GET, POST, HEAD, PUT
+Save everything locally in the request history
