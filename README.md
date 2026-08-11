@@ -1,5 +1,5 @@
 # GS.HTTP
-GS HTTP is a lightweight and fast utility designed for checking HTTP requests.
+GS HTTP is a lightweight and fast utility designed for checking HTTP requests.<br><br>
 GS HTTP is a lightweight and fast utility designed specifically for web developers, system administrators, and anyone working with APIs and network requests.
 
 With GS HTTP, you can:
