@@ -5,13 +5,14 @@ plugins {
 
 android {
     namespace = "com.proxy.gshttp"
-    compileSdk = 34
+
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.proxy.com.proxy.gshttp"
+        applicationId = "com.proxy.gshttp"
         minSdk = 24
-        targetSdk = 34
 
+        targetSdk = 35
 
         versionCode = 6
         versionName = "1.0.6"
@@ -22,7 +23,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-
 
             signingConfig = signingConfigs.getByName("debug")
 
@@ -48,6 +48,15 @@ android {
             jvmTarget = "11"
         }
     }
+
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            output.outputFileName = "gshttp-v${variant.versionName}.apk"
+        }
+    }
 }
 
 dependencies {
@@ -55,14 +64,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
-
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation("androidx.compose.ui:ui-graphics:1.5.4")
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
     implementation("androidx.compose.material3:material3:1.1.2")
 
-
-    implementation(libs.okhttp)
+    libs.okhttp?.let { implementation(it) }
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -73,6 +80,3 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
     implementation("androidx.compose.material:material-icons-extended")
 }
-
-
-
