@@ -53,7 +53,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -88,6 +88,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.text.trim
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 
 interface MonochromeColors {
     val bgPrimary: Color
@@ -229,7 +232,7 @@ fun MainAppScreen(
     val infoSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val historySheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val inspectorSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
-
+    val isDarkTheme = MaterialTheme.colorScheme.background.red < 0.5f
     var isHistorySheetOpen by remember { mutableStateOf(false) }
     var isResponseInspectorSheetOpen by remember { mutableStateOf(false) }
 
@@ -502,6 +505,9 @@ fun MainAppScreen(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
 
+
+
+
                     Box(
                         modifier = Modifier
                             .size(100.dp)
@@ -509,13 +515,14 @@ fun MainAppScreen(
                             .background(palette.textPrimary),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            "GS",
-                            fontSize = 38.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = palette.bgPrimary
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_gs_ht),
+                            contentDescription = "Аватар",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
+
 
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -1301,8 +1308,7 @@ fun MainAppScreen(
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                         RadioButton(
                             selected = currentLanguage == "ru",
-                            onClick = {
-                                currentLanguage = "ru"
+                            onClick = {currentLanguage = "ru"
                                 try {
                                     context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit().putString("app_lang", "ru").apply()
                                 } catch (e: Exception) {
