@@ -1,6 +1,7 @@
 package com.proxy.gshttp
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.foundation.background
@@ -9,11 +10,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -28,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +70,27 @@ fun InfoBottomSheetDialog(
                 color = textColorPrimary
             )
             Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(textColorPrimary),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_gs_ht),
+                    contentDescription = "Аватар",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            Text(
+                "GS HTTP",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Black,
+                color = textColorPrimary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = strings["developer"] ?: "Developer: Georgy Smerdov",
                 fontSize = 14.sp,
