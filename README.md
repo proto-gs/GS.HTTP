@@ -30,7 +30,7 @@ There are two full-time IDLE programs where you can easily open and work with a 
 * [AndroidStudio](https://developer.android.com/studio)(recommended)
 * [Intelij IDEA](https://www.jetbrains.com/idea/)<br><br>
 Once you have downloaded IDLE from the official website, you can clone the repository using the command<br> `$ git clone https://github.com/proto-gs/GS.HTTP`<br><br>
-To make changes to the repository, use the `git add` command. This will save all changes and stage them.<br> Commit with `git commit -m "Your description of the changes"` to commit the changes locally.<br> Push to GitHub with `git push` to upload files to the server.
+To make changes to the repository, use the `git add` command. This will save all changes and stage them.<br> Commit with `git commit -m "Your description of the changes"` to commit the changes locally.<br> Push to GitHub with `git push` to upload files to the server.<br>
 Using the `git pull` command, you will pull in all updates from the GitHub repository, provided there are no conflicts in your local project.
 For this you will also need git pre-installed.<br><br>
 Once you have successfully cloned the repository, all you have to do is compile and run it using `./gradlew`<br>
