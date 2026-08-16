@@ -18,7 +18,7 @@ android {
                 }
             }
 
-            storeFile = file("proto-gs-key-for-gshttp.jks")
+            storeFile = rootProject.file("proto-gs-key-for-gshttp.jks")
             storePassword = properties.getProperty("RELEASE_STORE_PASSWORD")
             keyAlias = properties.getProperty("RELEASE_KEY_ALIAS")
             keyPassword = properties.getProperty("RELEASE_KEY_PASSWORD")
@@ -81,8 +81,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
-
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.androidx.compose.bom.get()))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -96,8 +95,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom.get()))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+
+
